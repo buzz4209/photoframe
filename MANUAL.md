@@ -7,21 +7,21 @@ Photoframe requires about 1GB of storage due to all dependencies. If you're usin
 
 Make your distro of choice is up-to-date by issuing
 
-`apt update && apt upgrade`
+`sudo apt update && apt upgrade`
 
 Once done, we need to install all dependencies
 
-`apt install apt-utils raspi-config git fbset python python-requests python-requests-oauthlib python-flask python-flask-httpauth imagemagick python-smbus bc`
+`sudo apt install apt-utils raspi-config git fbset python3 python3-requests python3-requests-oauthlib python3-flask python3-flask-httpauth imagemagick python3-smbus python3-path python3-dbg bc`
 
 Next, let's tweak the boot so we don't get a bunch of output
 
-Edit the `/boot/cmdline.txt` and add the following to the end of the line:
+Edit the `/boot/firmware/cmdline.txt` and add the following to the end of the line:
 
 ```
 console=tty3 loglevel=3 consoleblank=0 vt.global_cursor_default=0 logo.nologo
 ```
 
-You also need to edit the `/boot/config.txt`
+You also need to edit the `/boot/firmware/config.txt`
 
 Add the following
 
@@ -34,13 +34,13 @@ We also want to disable the first console (since that's going to be our frame). 
 issuing
 
 ```
-systemctl disable getty@tty1.service
+sudo systemctl disable getty@tty1.service
 ```
 
 If you're using a rasbian (or a varity of said distro) you may need to also do
 
 ```
-systemctl mask plymouth-start.service
+sudo systemctl mask plymouth-start.service
 ```
 
 or you might still see the boot messages.
@@ -48,18 +48,19 @@ or you might still see the boot messages.
 Almost there, we also need to set the timezone for the device, or it will be confusing when the on/off hours doesn't meet expectations.
 
 ```
-timedatectl set-timezone America/Los_Angeles
+sudo timedatectl set-timezone America/Los_Angeles
 ```
 
 If you don't know your timezone, you can list all supported
 
 ```
-timedatectl list-timezones
+sudo timedatectl list-timezones
 ```
 
 Finally, time to install photoframe, which means downloading the repo, install the service and reboot
 
 ```
+sudo -s
 cd /root
 git clone https://github.com/mrworf/photoframe.git
 cd photoframe
@@ -75,7 +76,7 @@ Done! Once the device has rebooted, it will tell you how to connect to it and th
 This requires a couple of extra steps, first we need more software
 
 ```
-apt install firmware-brcm80211 pi-bluetooth wpasupplicant iw crda wireless-regdb
+sudo apt install firmware-brcm80211 pi-bluetooth wpasupplicant iw crda wireless-regdb
 ```
 
 Next, we need to configure the wifi interface, open `/etc/network/interfaces` in your favorite editor and
